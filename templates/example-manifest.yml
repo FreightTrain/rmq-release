@@ -1,0 +1,78 @@
+compilation:
+  cloud_properties:
+    instance_type: c1.medium
+  network: backend
+  reuse_compilation_vms: true
+  workers: 3
+director_uuid: < my director uuid >
+jobs:
+- instances: 1
+  name: rmq
+  networks:
+  - name: backend
+    static_ips:
+    - 172.16.129.67
+  persistent_disk: 1024
+  resource_pool: infrastructure
+  template: rmq
+- instances: 1
+  name: rmq_broker
+  networks:
+  - name: backend
+    static_ips:
+    - 172.16.129.68
+  persistent_disk: 1024
+  properties:
+    rmq_broker:
+      debug: false
+      password: admin
+      username: admin
+  resource_pool: infrastructure
+  template: rmq_broker
+name: rmq-aws
+networks:
+- name: backend
+  subnets:
+  - cloud_properties:
+      security_groups:
+      - < my sec group >
+      subnet: < my subnet id >
+    dns:
+    - 172.16.128.2
+    gateway: 172.16.129.1
+    range: 172.16.129.0/24
+    reserved:
+    - 172.16.129.2 - 172.16.129.59
+    - 172.16.129.69 - 172.16.129.254
+    static:
+    - 172.16.129.67
+    - 172.16.129.68
+  type: manual
+properties:
+  description: RMQ
+  rmq:
+    ip: 172.16.129.67
+    password: admin
+    username: admin
+release:
+  name: rmq
+  version: latest
+resource_pools:
+- cloud_properties:
+    instance_type: m1.small
+  name: infrastructure
+  network: backend
+  size: 2
+  stemcell:
+    name: bosh-aws-xen-ubuntu
+    version: latest
+stemcells:
+  stemcell_name: bosh-aws-xen-ubuntu
+  stemcell_version: latest
+update:
+  canaries: 1
+  canary_watch_time: 3000-90000
+  max_errors: 1
+  max_in_flight: 1
+  update_watch_time: 3000-90000
+
