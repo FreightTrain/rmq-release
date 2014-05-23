@@ -2,11 +2,11 @@
     "broker": {
         "host": "0.0.0.0",
         "port": 9998,
-        "username": "admin",
-        "password": "admin",
-        "debug": true,
-        "logFile": "/var/vcap/sys/log/rmq_broker/rmq_broker.log",
-        "trace": true,
+        "username": "<%= p('rmq_broker.username') %>",
+        "password": "<%= p('rmq_broker.password') %>",
+        "debug": <%= p('rmq_broker.debug') %>,
+        "logFile": "unimplemented",
+        "trace": <%= p('rmq_broker.debug') %>,
         "pidFile": "unimplemented"
     },
     "rabbitmq": {
@@ -14,16 +14,14 @@
         "zones": [
            {
                 "name": "dc1",
-                "host": "10.244.5.226",
+                "host": "<%= p('rmq.ip') %>",
                 "port": 5672,
-                "mgmtHost": "10.244.5.226",
+                "mgmtHost": "<%= p('rmq.ip') %>",
                 "mgmtPort": 15672,
-                "mgmtUser": "rmq_broker",
-                "mgmtPass": "c1oudc0w",
-                "trace": true
+                "mgmtUser": "<%= p('rmq.username') %>",
+                "mgmtPass": "<%= p('rmq.password') %>",
+                "trace": <%= p('rmq_broker.debug') %>
             }
         ]
     }
 }
-
-

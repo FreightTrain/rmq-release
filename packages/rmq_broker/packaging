@@ -2,3 +2,4 @@
 set -e
 
 cp -a rmq_broker_go/cf-rabbitmq-broker-f47e0e0d1e2a5d9aef986d523fed1fc50d68cfdd ${BOSH_INSTALL_TARGET}/cf-rabbitmq-broker
+chmod +x ${BOSH_INSTALL_TARGET}/cf-rabbitmq-broker

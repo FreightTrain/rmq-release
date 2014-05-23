@@ -1,8 +1,16 @@
 ---
 name: rmq
 templates:
-  bin/rmq_ctl: bin/rmq_ctl
+  bin/rmq_ctl.erb: bin/rmq_ctl
 
 packages:
 - erlang
 - rmq
+
+properties:
+  rmq.username:
+    description: RabbitMQ admin username
+    default: admin
+  rmq.password:
+    description: RabbitMQ admin password
+    default: admin

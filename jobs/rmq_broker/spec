@@ -6,3 +6,23 @@ templates:
 
 packages:
 - rmq_broker
+
+properties:
+  rmq_broker.username:
+    description: broker username
+    default: admin
+  rmq_broker.password:
+    description: broker password
+    default: admin
+  rmq_broker.debug:
+    description: debug
+    default: false
+
+  rmq.username:
+    description: RabbitMQ admin username
+    default: admin
+  rmq.password:
+    description: RabbitMQ admin password
+    default: admin
+  rmq.ip:
+    description: RabbitMQ server IP

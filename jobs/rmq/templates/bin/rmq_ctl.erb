@@ -22,8 +22,8 @@ export RABBITMQ_MNESIA_DIR="${STORE_DIR}"
 export RABBITMQ_ENABLED_PLUGINS_FILE="${STORE_DIR}/enabled_plugins"
 export RABBITMQ_PLUGINS_EXPAND_DIR="${RUN_DIR}/plugins_expand"
 
-rabbit_api_user_name="rmq_broker"
-rabbit_api_user_password="c1oudc0w"
+rabbit_api_user_name="<%= p('rmq.username') %>"
+rabbit_api_user_password="<%= p('rmq.password') %>"
 
 function directory_setup {
   for dir in ${RUN_DIR} ${TMP_DIR} ${STORE_DIR} ${RABBITMQ_LOG_BASE}
@@ -34,17 +34,30 @@ function directory_setup {
   done
 }
 
+function user_exists {
+  user=$1
+  if chpst -u vcap:vcap ${rabbitmqctl} list_users  | grep -q -P "^${user}\t"
+    then return 0
+    else return 1
+  fi
+}
+
 function user_setup {
   local rabbitmqctl="${RABBITMQ_HOME}/sbin/rabbitmqctl"
   chpst -u vcap:vcap ${rabbitmqctl} wait ${RABBITMQ_PID_FILE}
 
-  local api_user_count=$(chpst -u vcap:vcap ${rabbitmqctl} list_users | grep -c -P "^${rabbit_api_user_name}\t")
-  if [ ${api_user_count} == "0" ]; then
-    chpst -u vcap:vcap ${rabbitmqctl} add_user ${rabbit_api_user_name} ${rabbit_api_user_password}
+  if user_exists "guest"
+    then
+      chpst -u vcap:vcap ${rabbitmqctl} delete_user guest
+  fi
+
+  if user_exists "${rabbit_api_user_name}"
+    then true
+    else chpst -u vcap:vcap ${rabbitmqctl} add_user ${rabbit_api_user_name} ${rabbit_api_user_password}
   fi
 
   chpst -u vcap:vcap ${rabbitmqctl} change_password ${rabbit_api_user_name} ${rabbit_api_user_password}
-  chpst -u vcap:vcap ${rabbitmqctl} set_user_tags ${rabbit_api_user_name} management
+  chpst -u vcap:vcap ${rabbitmqctl} set_user_tags ${rabbit_api_user_name} management administrator
 }
 
 function perform_action {
@@ -59,6 +72,7 @@ function perform_action {
       ;;
 
     stop)
+      cd ${RUN_DIR}
       chpst -u vcap:vcap ${RABBITMQ_HOME}/sbin/rabbitmqctl stop
       ;;
 
