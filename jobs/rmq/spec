@@ -1,0 +1,8 @@
+---
+name: rmq
+templates:
+  bin/rmq_ctl: bin/rmq_ctl
+
+packages:
+- erlang
+- rmq
