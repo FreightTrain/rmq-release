@@ -1,6 +1,5 @@
 ---
 name: rmq_broker
-dependencies:
-  - ruby
+dependencies: []
 files:
-- rmq_broker/service_broker/**/*
+- rmq_broker_go/cf-rabbitmq-broker-f47e0e0d1e2a5d9aef986d523fed1fc50d68cfdd

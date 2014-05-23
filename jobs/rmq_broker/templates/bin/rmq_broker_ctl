@@ -89,6 +89,8 @@ function pid_guard() {
 function directory_setup {
 
     JOB_NAME="${1}"
+    export PKG_DIR="/var/vcap/packages/$JOB_NAME"
+    export JOB_DIR="/var/vcap/jobs/$JOB_NAME"
     export RUN_DIR="/var/vcap/sys/run/$JOB_NAME"
     export LOG_DIR="/var/vcap/sys/log/$JOB_NAME"
     export TMP_DIR="/var/vcap/sys/tmp/$JOB_NAME"
@@ -112,9 +114,10 @@ function perform_action {
   case ${action} in
 
     start)
-      cd /var/vcap/packages/rmq_broker 
       pid_guard $PID_FILE $JOB_NAME
-      chpst -u vcap:vcap bundle exec rackup config.ru -P $PID_FILE -D
+      chpst -u vcap:vcap ${PKG_DIR}/cf-rabbitmq-broker ${JOB_DIR}/config/rmq_broker_config.json 2>${LOG_DIR}/${JOB_NAME}_stderr.log 1>${LOG_DIR}/${JOB_NAME}_stdout.log &
+      echo "$!" > $PID_FILE
+      disown
       ;;
 
     stop)
@@ -134,8 +137,6 @@ function perform_action {
 # Main
 #
 
-export LANG="en_US.UTF-8"
-export PATH=/var/vcap/packages/ruby/bin:$PATH
 action=${1}
 directory_setup "rmq_broker"
 perform_action ${action}

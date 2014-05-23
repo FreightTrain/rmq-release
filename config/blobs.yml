@@ -23,3 +23,7 @@ erlang/otp_src_17.0.tar.gz:
   object_id: 0d1b70cd-6e45-4102-b242-d9c4556b69bf
   sha: de4d195e3c7d8ea0b3d2bc73b937d3dcad37b25a
   size: 66640875
+rmq_broker_go/cf-rabbitmq-broker-f47e0e0d1e2a5d9aef986d523fed1fc50d68cfdd:
+  object_id: bf57bc0e-716f-4a90-a325-6b1809cc3ee9
+  sha: 0a2d347e9db87d84ca5ac97123f04ca5567bbd7a
+  size: 8965248
