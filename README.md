@@ -23,10 +23,12 @@ A [BOSH](http://docs.cloudfoundry.org/bosh/) release for:
 
 The [RabbitMQ Web management plugin](https://www.rabbitmq.com/management.html) is enabled by default. The credentials are specified in the BOSH manifest.
 
+## Broker registration
+
+```
+$ bosh run errand rmq_broker_registrar
+```
+
 ## Thanks
 
-Thanks to [Michal Jemala ](https://github.com/michaljemala) and [Ryan Grenz](https://github.com/grenzr) for their work on the RabbitMQ Cloud Foundry service broker.
-
-
-
-
+Thanks to [Michal Jemala](https://github.com/michaljemala) and [Ryan Grenz](https://github.com/grenzr) for their work on the RabbitMQ Cloud Foundry service broker.
