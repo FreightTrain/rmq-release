@@ -25,6 +25,17 @@ export RABBITMQ_PLUGINS_EXPAND_DIR="${RUN_DIR}/plugins_expand"
 rabbit_api_user_name="<%= p('rmq.username') %>"
 rabbit_api_user_password="<%= p('rmq.password') %>"
 
+# RabbitMQ will use $HOSTNAME to name the cluster node. In BOSH our $HOSTNAME is a random UUID.
+# The random UUID changes when BOSH re-creates a server and re-attaches the persistent disk. 
+# That breaks rabbit and causes it to no longer start. To avoid this we are replacing the BOSH
+# UUID hostname with a deterministic hostname based on the data we get from BOSH.
+export BOSH_RABBITMQ_NODE_UNIQUE_ID="<%= name %><%= index %>"
+export BOSH_RABBITMQ_NODE_IP="<%= spec.networks.send(spec.networks.methods(false).first).ip %>"
+export BOSH_RABBITMQ_HOSTS_LINE="${BOSH_RABBITMQ_NODE_IP} ${BOSH_RABBITMQ_NODE_UNIQUE_ID}"
+export HOSTNAME=${BOSH_RABBITMQ_NODE_UNIQUE_ID}
+
+export BOSH_HOSTS_FILE_TOKEN="##-start-of-bosh-additions-##"
+
 function directory_setup {
   for dir in ${RUN_DIR} ${TMP_DIR} ${STORE_DIR} ${RABBITMQ_LOG_BASE}
   do
@@ -32,6 +43,19 @@ function directory_setup {
     chown vcap:vcap ${dir}
     chmod 775 ${dir}
   done
+}
+
+function hosts_file_setup {
+  # The first time we run, write the start token
+  if grep -q "${BOSH_HOSTS_FILE_TOKEN}" /etc/hosts
+    then true
+    else
+      echo -e "\n${BOSH_HOSTS_FILE_TOKEN}\n" >> /etc/hosts
+  fi
+
+  # Every time we run, replace the BOSH hosts file content
+  local bosh_host_file_content="${BOSH_HOSTS_FILE_TOKEN}\n${BOSH_RABBITMQ_HOSTS_LINE}\n"
+  perl -0777 -p -i -e "s|${BOSH_HOSTS_FILE_TOKEN}(.*\n)+\Z|${bosh_host_file_content}|g" /etc/hosts
 }
 
 function user_exists {
@@ -86,4 +110,5 @@ function perform_action {
 
 # Main
 directory_setup "rmq"
+hosts_file_setup
 perform_action ${1}
