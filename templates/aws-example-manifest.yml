@@ -29,6 +29,24 @@ jobs:
       username: admin
   resource_pool: infrastructure
   template: rmq_broker
+- instances: 1
+  lifecycle: errand
+  name: rmq_broker_registrar
+  networks:
+  - name: backend
+  properties:
+    broker:
+      host: 172.16.129.68
+      name: rabbitmq
+      password: admin
+      port: 9998
+      username: admin
+    cf:
+      admin_password: admin
+      admin_username: admin
+      api_url: < my cloud controller url >
+  resource_pool: infrastructure
+  template: broker-registrar
 name: rmq-aws
 networks:
 - name: backend
@@ -62,7 +80,7 @@ resource_pools:
     instance_type: m1.small
   name: infrastructure
   network: backend
-  size: 2
+  size: 3
   stemcell:
     name: bosh-aws-xen-ubuntu
     version: latest
