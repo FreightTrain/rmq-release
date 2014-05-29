@@ -1,0 +1,89 @@
+compilation:
+  cloud_properties:
+    name: random
+  network: backend
+  reuse_compilation_vms: true
+  workers: 3
+director_uuid: < my director uuid >
+jobs:
+- instances: 1
+  name: rmq
+  networks:
+  - name: backend
+    static_ips:
+    - 10.244.5.234
+  persistent_disk: 1024
+  resource_pool: infrastructure
+  template: rmq
+- instances: 1
+  name: rmq_broker
+  networks:
+  - name: backend
+    static_ips:
+    - 10.244.5.238
+  persistent_disk: 1024
+  properties:
+    rmq_broker:
+      debug: false
+      password: admin
+      username: admin
+  resource_pool: infrastructure
+  template: rmq_broker
+name: rmq-lite
+networks:
+- name: backend
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.5.224/30
+    reserved:
+    - 10.244.5.225
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.5.228/30
+    reserved:
+    - 10.244.5.229
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.5.232/30
+    reserved:
+    - 10.244.5.233
+    static:
+    - 10.244.5.234
+  - cloud_properties:
+      name: random
+    range: 10.244.5.236/30
+    reserved:
+    - 10.244.5.237
+    static:
+    - 10.244.5.238
+properties:
+  description: RMQ
+  rmq:
+    ip: 10.244.5.234
+    password: admin
+    username: admin
+release:
+  name: rmq
+  version: latest
+resource_pools:
+- cloud_properties:
+    name: random
+  name: infrastructure
+  network: backend
+  size: 2
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu
+    version: latest
+stemcells:
+  stemcell_name: bosh-aws-xen-ubuntu
+  stemcell_version: latest
+update:
+  canaries: 1
+  canary_watch_time: 3000-90000
+  max_errors: 1
+  max_in_flight: 1
+  update_watch_time: 3000-90000
+
