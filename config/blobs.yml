@@ -27,3 +27,7 @@ rmq_broker_go/cf-rabbitmq-broker-f47e0e0d1e2a5d9aef986d523fed1fc50d68cfdd:
   object_id: bf57bc0e-716f-4a90-a325-6b1809cc3ee9
   sha: 0a2d347e9db87d84ca5ac97123f04ca5567bbd7a
   size: 8965248
+rmq_broker_go/cf-rabbitmq-broker-e7a3953b89386060739c1c5214bd0f3b2f97a023:
+  object_id: 3f72f89c-6e77-421d-a1f1-892ab1c60dc7
+  sha: dc96e2fcfbac1e23d3d41cf691ed390406e0c786
+  size: 8963624
