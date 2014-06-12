@@ -1,5 +1,5 @@
 # abort script on any command that exit with a non zero value
 set -e
 
-cp -a rmq_broker_go/cf-rabbitmq-broker-e7a3953b89386060739c1c5214bd0f3b2f97a023 ${BOSH_INSTALL_TARGET}/cf-rabbitmq-broker
+cp -a rmq_broker_go/cf-rabbitmq-broker-0612d64e3aeaad52ab86dedac95ae72123bf316a ${BOSH_INSTALL_TARGET}/cf-rabbitmq-broker
 chmod +x ${BOSH_INSTALL_TARGET}/cf-rabbitmq-broker
